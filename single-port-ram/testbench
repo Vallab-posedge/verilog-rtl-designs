@@ -1,0 +1,81 @@
+`timescale 1ns/1ps
+
+module tb_single_port_RAM;
+
+reg [5:0] addr;
+reg [15:0] data_in;
+reg we;
+reg clk;
+
+wire [15:0] data_out;
+
+single_port_RAM uut (
+    .addr(addr),
+    .data_in(data_in),
+    .we(we),
+    .clk(clk),
+    .data_out(data_out)
+);
+
+
+// Clock Generation
+
+initial
+begin
+    clk = 0;
+    forever #5 clk = ~clk;
+end
+
+
+// Test Cases
+
+initial
+begin
+
+    // Test Case 1 : Write 25 to Address 10
+
+    addr = 6'd10;
+    data_in = 16'd25;
+    we = 1;
+    #10;
+
+    // Read Address 10
+
+    we = 0;
+    addr = 6'd10;
+    #10;
+
+
+    // Test Case 2 : Write 100 to Address 30
+
+    addr = 6'd30;
+    data_in = 16'd100;
+    we = 1;
+    #10;
+
+    // Read Address 30
+
+    we = 0;
+    addr = 6'd30;
+    #10;
+
+
+    // Test Case 3 : Overwrite Address 10
+
+    addr = 6'd10;
+    data_in = 16'd55;
+    we = 1;
+    #10;
+
+    // Read Address 10
+
+    we = 0;
+    addr = 6'd10;
+    #10;
+
+    #10;
+    $finish;
+
+end
+
+endmodule
